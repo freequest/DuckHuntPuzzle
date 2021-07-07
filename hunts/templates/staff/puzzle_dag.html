@@ -1,0 +1,215 @@
+{% extends "staff/staff_base.html" %}
+{% block title %}Hunt Management{% endblock title %}
+
+{% block includes %}
+  <script type="text/javascript">
+    $(function() {
+      $('.list-group-item').on('click', function() {
+        if($('.glyphicon.glyphicon-chevron-right', this).length){
+          $('.glyphicon.glyphicon-chevron-right', this)
+            .toggleClass('glyphicon-chevron-right')
+            .toggleClass('glyphicon-chevron-down');
+        }
+        else if($('.glyphicon.glyphicon-chevron-down', this).length){
+          $('.glyphicon.glyphicon-chevron-down', this)
+            .toggleClass('glyphicon-chevron-right')
+            .toggleClass('glyphicon-chevron-down');
+        }
+      });
+
+      $('.download-btn').on('click', function(e) {
+        e.stopPropagation();
+      })
+
+      $(".downloadForm").submit(function(e) {
+        e.preventDefault();
+
+        var form = $(this);
+        var url = form.attr('action');
+
+        $.ajax({
+          type: "POST",
+          url: url,
+          data: form.serialize(),
+          success: function(task_id) {
+            $('#downloadResponse').html("Downloading files ");
+            $('#myModal').modal();
+            var num_requests = 0;
+            var checkInterval = setInterval(function(){
+              $.ajax({
+                type: "GET",
+                url: "/staff/control/",
+                data: {action: "check_task", task_id: task_id},
+                success: function(result) {
+                  num_requests += 1;
+                  if(num_requests > 200) {
+                    $('#downloadResponse').append("<br>Request timed out");
+                    clearInterval(checkInterval);
+                    return;
+                  }
+                  var result = JSON.parse(result);
+                  if(result['have_result']) {
+                    $('#downloadResponse').html(result['result_text']);
+                    clearInterval(checkInterval);
+                  } else {
+                    $('#downloadResponse').append(".");
+                  }
+                },
+                error: function(result) {
+                  $('#downloadResponse').append(" 500 Server Error<br>Please report this issue.");
+                  clearInterval(checkInterval);
+                }
+              });
+            }, 500);
+          }
+        });
+      });
+
+    });
+  </script>
+  
+
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+
+    <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+    <script src="https://unpkg.com/dagre@0.7.4/dist/dagre.js"></script>
+    <script src="https://unpkg.com/cytoscape-dagre@2.3.2/cytoscape-dagre.js"></script>
+
+    <style>
+      #cy {
+        font-family: helvetica;
+        font-size: 14px;
+        border: 1px solid;
+      }
+
+      #cy {
+        width: 100%;
+        height: 100%;
+        z-index: 999;
+      }
+      #cy.mouseover { cursor: pointer; }
+
+    </style>
+
+    <script>
+      window.addEventListener('DOMContentLoaded', function(){
+
+        var cy = window.cy = cytoscape({
+          container: document.getElementById('cy'),
+
+          boxSelectionEnabled: false,
+          autounselectify: true,
+
+          layout: {
+            name: 'dagre'
+          },
+          
+          boxSelectionEnabled: false,
+
+
+          style: [
+            {
+              selector: 'node',
+              style: {
+                'background-color': 'data(back)',
+                'content': 'data(name)',
+                'label': 'data(name)',
+                'text-wrap': 'wrap',
+                'text-valign': 'center',
+                'text-halign': 'center',
+                'width': '150px',
+                'shape': 'rectangle',
+                'text-max-width':'150px',
+              }
+            },
+            {
+              selector: ':parent',
+              css: {
+                'text-valign': 'top',
+                'text-halign': 'center',
+                'background-opacity': '0',
+                'text-margin-y' : '-10px',
+                'color':'#000000',
+              }
+            },
+
+            {
+              selector: 'edge',
+              style: {
+                'width': 4,
+                'target-arrow-shape': 'triangle',
+                'line-color': '#9dbaea',
+                'target-arrow-color': '#9dbaea',
+                'curve-style': 'bezier'
+              }
+            }
+          ],
+
+          elements: {
+            nodes: [
+            {% for puz in puzzles %}
+              { data: { id: '{{puz.pk}}', 
+                name: "{{puz.puzzle_name | safe}}{%if puz.num_required_to_unlock != puz.puzzle_set.count %} \n[{{puz.num_required_to_unlock}} to unlock]{% endif %}",
+                back: '{%if puz.num_required_to_unlock == puz.puzzle_set.count %}#d46b63{%elif puz.num_required_to_unlock < puz.puzzle_set.count%}#aaaa55{%else%}#888888{%endif%}',
+                href: '/admin/hunts/puzzle/{{puz.pk}}/change/',
+                parent: 'ep{{puz.episode.pk}}',
+               } },
+            {% endfor %}
+            {% for ep in episodes %}
+              { data: { id: 'ep{{ep.pk}}', 
+                name: '{{ep | safe}}',
+                href: '/admin/hunts/episode/{{ep.pk}}/change/',
+                parent:'hu{{ep.hunt.pk}}',
+               } },
+            {% endfor %}
+            {% for hu in hunts %}
+              { data: { id: 'hu{{hu.pk}}', 
+                name: '{{hu | safe}}',
+                href: '/admin/hunts/hunt/{{hu.pk}}/change/',
+               } },
+            {% endfor %}
+            ],
+            edges: [
+            {% for puz in puzzles %}
+            {% for unlock in puz.unlocks.all %}
+              { data: { source: '{{puz.pk}}', target: '{{unlock.pk}}' } },
+            {% endfor %}
+            {% endfor %}
+            {% for ep in episodes %}
+            {% if ep.unlocks != None %}
+              { data: { source: 'ep{{ep.pk}}', target: 'ep{{ep.unlocks.pk}}' } },
+            {%endif%}
+            {% endfor %}
+            ]
+          }
+        });
+        
+
+        
+            cy.on('mouseover', ':childless', function(e){
+        $('#cy').css('cursor', 'pointer');
+    });
+    cy.on('mouseout', ':childless', function(e){
+        $('#cy').css('cursor', 'default');
+    });
+
+        
+<!--          cy.on('tap', 'node', function(){-->
+          cy.on('tap', ':childless', function(){
+            try { // your browser may block popups
+              window.open( this.data('href') );
+            } catch(e){ // fall back on url change
+              window.location.href = this.data('href');
+            }
+          });     
+
+      });
+    </script>  
+{% endblock includes%}
+
+{% block content %}
+  
+  
+    <div id="cy"></div>
+
+{% endblock content %}

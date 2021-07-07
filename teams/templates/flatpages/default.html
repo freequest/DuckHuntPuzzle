@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load hunt_tags %}
+
+{% block includes %}
+  <script src="{{ STATIC_URL }}jquery.min.js"></script>
+{% endblock includes %}
+
+{% block content %}
+
+<div class="container">
+  {%  render_with_context_simpletag  %}
+</div>
+{% endblock content %}

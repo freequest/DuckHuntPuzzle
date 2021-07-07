@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load hunt_tags %}
+{% block title %}Not Available{% endblock title %}
+
+{% block content %}
+<div class="container">
+  <h1 class="title">Not Available</h1>
+
+  <center>
+    {% if reason == "hunt" %}
+    <p>
+      The resource or page you are attempting to access is associated with a
+      puzzlehunt that is not yet started. Please refresh this page after the
+      hunt has started.
+    </p>
+    {% endif %}
+  </center>
+</div>
+{% endblock content %}
+{% block footer %}{% endblock footer %}

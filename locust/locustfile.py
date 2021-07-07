@@ -338,7 +338,7 @@ def puzzle_pdf_link(l):
 
 def puzzle_answer(l):
     # Submit answer to current puzzle using POST with some correctness chance
-    # 1 in 9 submissions is correct
+    # 1 in 9 guesss is correct
     puzzle_id = l.locust.puzzle_id
     if(random.random() < (1.0 / 9.0)):
         answer = "answer" + puzzle_id
@@ -348,50 +348,6 @@ def puzzle_answer(l):
     message_data = {"answer": answer}
     store_CSRF(l, CSRF_post(l, "/puzzle/" + puzzle_id + "/", message_data))
     l.locust.poller.reset_time_iter()
-
-
-def chat_main_page(l):
-    # Load main chat page and store ajax value in locust object
-    response = url_all(l, better_get(l, "/chat/"))
-
-    search_results = re.search(r"last_pk = (.*);", response.text)
-    if(search_results):
-        last_pk = search_results.group(1)
-    else:
-        sys.stdout.write("chat_main_page could not find ajax: %s" % str(response.text))
-        sys.stdout.flush()
-        last_pk = ""
-    set_ajax_args(l, "chat", {'last_pk': last_pk})
-
-    search_results = re.search(r"curr_team = (.*);", response.text)
-    if(search_results):
-        curr_team = search_results.group(1)
-    else:
-        curr_team = ""
-    l.locust.team_pk = curr_team
-
-
-def chat_ajax(l):
-    # Make ajax request with current ajax value and store new value
-    response = better_get(l, "/chat/?last_pk=" + str(get_ajax_args(l, "chat")['last_pk']),
-                          headers=ajax_headers, name="/chat/ AJAX")
-    try:
-        set_ajax_args(l, "chat", {'last_pk': response.json()["last_pk"]})
-    except:
-        sys.stdout.write("chat_ajax could not find ajax: %s" % str(response.text))
-        sys.stdout.flush()
-        pass
-
-
-def chat_new_message(l):
-    # Make POST request to create a new chat message, store ajax value
-    message_data = {
-        "team_pk": int(l.locust.team_pk),
-        "message": random_string(40),
-        "is_response": False,
-        "is_announcement": False
-    }
-    store_CSRF(l, CSRF_post(l, "/chat/", message_data))
 
 
 def info_main_page(l):
@@ -436,7 +392,7 @@ def previous_hunt(l):
     url_all(l, better_get(l, "/hunt/" + hunt_id))
 
 
-def create_account(l):
+def register(l):
     # Load the create account page
     url_all(l, better_get(l, "/accounts/create/"))
 
@@ -455,58 +411,14 @@ def user_profile(l):
 
 # ========== STAFF PAGE VIEW FUNCTIONS ==========
 
-def staff_chat_main_page(l):
-    # Load main chat page and store ajax value in locust object
-    response = url_all(l, better_get(l, "/staff/chat/"))
-
-    search_results = re.search(r"last_pk = (.*);", response.text)
-    if(search_results):
-        last_pk = search_results.group(1)
-    else:
-        sys.stdout.write("staff_chat_main_page could not find ajax: %s" % str(response.text))
-        sys.stdout.flush()
-        last_pk = ""
-    set_ajax_args(l, "staff_chat", {'last_pk': last_pk})
-
-    search_results = re.findall(r"data-id='(.*)' ", response.text)
-    if(search_results):
-        l.locust.staff_chat_teams = search_results
-    else:
-        l.locust.staff_chat_teams = None
-
-
-def staff_chat_new_message(l):
-    # Make POST request to create a new chat message, store ajax value
-    if(l.locust.staff_chat_teams):
-        message_data = {
-            "team_pk": int(random.choice(l.locust.staff_chat_teams)),
-            "message": random_string(40),
-            "is_response": True,
-            "is_announcement": False
-        }
-        store_CSRF(l, CSRF_post(l, "/staff/chat/", message_data))
-
-
-def staff_chat_ajax(l):
-    # Make ajax request with current ajax value and store new value
-    response = better_get(l, "/staff/chat/?last_pk=" + str(get_ajax_args(l, "staff_chat")['last_pk']),
-                          headers=ajax_headers, name="/staff/chat/ AJAX")
-    try:
-        set_ajax_args(l, "staff_chat", {'last_pk': response.json()["last_pk"]})
-    except:
-        sys.stdout.write("staff_chat_ajax could not find ajax: %s" % str(response.text))
-        sys.stdout.flush()
-        pass
-
-
 def progress_main_page(l):
     response = url_all(l, better_get(l, "/staff/progress/"))
-    search_results = re.search(r"last_solve_pk = (.*);\n *last_unlock_pk = (.*);\n *last_submission_pk = (.*)", response.text)
+    search_results = re.search(r"last_solve_pk = (.*);\n *last_unlock_pk = (.*);\n *last_guess_pk = (.*)", response.text)
     if(search_results):
         set_ajax_args(l, "progress", {
             'last_solve_pk': search_results.group(1),
             'last_unlock_pk': search_results.group(2),
-            'last_submission_pk': search_results.group(3),
+            'last_guess_pk': search_results.group(3),
         })
     else:
         sys.stdout.write("progress_main_page could not find ajax: %s" % str(response.text))
@@ -514,7 +426,7 @@ def progress_main_page(l):
         set_ajax_args(l, "progress", {
             'last_solve_pk': 0,
             'last_unlock_pk': 0,
-            'last_submission_pk': 0,
+            'last_guess_pk': 0,
         })
 
     search_results = re.findall(r"id='p(.*)t(.*)' class='unavailable'", response.text)
@@ -540,7 +452,7 @@ def progress_ajax(l):
     response = better_get(l, "/staff/progress/?" +
         "last_solve_pk=" + str(get_ajax_args(l, "progress")['last_solve_pk']) +
         "&last_unlock_pk=" + str(get_ajax_args(l, "progress")['last_unlock_pk']) +
-        "&last_submission_pk=" + str(get_ajax_args(l, "progress")['last_submission_pk']),
+        "&last_guess_pk=" + str(get_ajax_args(l, "progress")['last_guess_pk']),
         headers=ajax_headers, name="/staff/progress/ AJAX")
     try:
         update_info = response.json()["update_info"]
@@ -548,7 +460,7 @@ def progress_ajax(l):
             set_ajax_args(l, "progress", {
                 'last_solve_pk': update_info[0],
                 'last_unlock_pk': update_info[1],
-                'last_submission_pk': update_info[2],
+                'last_guess_pk': update_info[2],
             })
     except:
         sys.stdout.write("progress_ajax could not find ajax: %s" % str(response.text))
@@ -566,7 +478,7 @@ def queue_main_page(l):
         sys.stdout.flush()
     set_ajax_args(l, "queue", {'last_date': last_date})
 
-    search_results = re.search(r"incorrect-replied *\n *submission.*data-id='(\d+)'>", response.text)
+    search_results = re.search(r"incorrect-replied *\n *guess.*data-id='(\d+)'>", response.text)
     if(search_results):
         l.locust.queue_sub_id = search_results.group(1)
     else:
@@ -697,7 +609,7 @@ class WebsiteSet(TaskSet):
                           prev_hunt_fs):            6,
         info_main_page:                             27,
         resources:                                  9,
-        create_account:                             1,
+        register:                             1,
         contact:                                    1,
         user_profile:                               1,
         stop:                                       70

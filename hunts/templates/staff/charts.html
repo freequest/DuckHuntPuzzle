@@ -1,0 +1,40 @@
+{% extends "staff/staff_base.html" %}
+{% block title %}Charts!{% endblock title %}
+
+{% block includes %}
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!--  <script> {% include "js/charts.js" %} </script>-->
+{% endblock includes %}
+
+{% block content %}
+  <h1>Charts! (TODO: USELESS? stats/charts may be enough )</h1>
+  <p>These charts will not automatically refresh</p>
+  <div id="chart_div1"></div>
+  <div id="chart_div2"></div>
+  <div id="chart_div7"></div>
+  <div id="chart_div3"></div>
+  <div id="chart_div4"></div>
+  <div id="chart_div5"></div>
+  <div id="chart_div6"></div>
+  <div id="table_div">
+    <h4>Puzzle stats</h4>
+    <table class="table table-striped table-condensed">
+      <tr>
+        <td><b>Puzzle</b></td>
+        <td><b>First Team</b></td>
+        <td><b>First Time</b></td>
+        <td><b>Num Soves</b></td>
+      </tr>
+      {% for row in chart_rows %}
+      <tr>
+        <td>{{ row.1 }}</td>
+        <td>{{ row.2 }}</td>
+        <td>{{ row.3|time:"h:i a" }}</td>
+        <td>{{ row.4 }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  
+{% endblock content %}

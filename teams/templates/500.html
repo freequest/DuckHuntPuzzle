@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load hunt_tags %}
+{% load static %}
+
+{% block title %}500 Error{% endblock title %}
+
+{% block left-header %}{% endblock left-header %}
+
+{% block content %}
+<div class="container">
+  <center><h1> 500 - Internal Server Error </h1></center>
+  <center><img width="500px" src="{% static "img/500.png" %}"></center>
+  <center><h4> If you're seeing this page, something has gone wrong on our server. </h4></center>
+  <center> If there is a puzzlehunt occuring right now, consider contacting us on our discord.</a> </center>
+  <br>
+  <br>
+  <center><p>Consider heading back to the <a href='/' class='icon-link'>main page.</a></p></center>
+  <center><b>This is not a puzzle.</b></center>
+</div>
+{% endblock content %}
+{% block footer %}{% endblock footer %}

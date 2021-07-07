@@ -1,0 +1,55 @@
+{% extends "staff/staff_base.html" %}
+{% block title %}Last Unlocked Puzzle Overview{% endblock title %}
+
+{% block includes %}
+<script src="{{ STATIC_URL }}jquery.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.combined.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.bootstrap.min.css"
+         />
+    <script>    
+        $(document).ready(function () {
+            $("#overview").tablesorter({theme:'bootstrap',
+            sortList: [[1,1]]
+             });
+             
+        });
+    </script>
+{% endblock includes %}
+
+{% block content %}
+  <h1>Last Unlocked Puzzle Overview</h1>
+  <div id=table-container>
+    <table id='overview' class="table table-condensed table-hover table-striped  tablesorter">
+      <thead class="overview-thead">
+        <tr>
+          <th class="leftmost topmost">Team</th>
+          <th>Last Unlocked</th>
+          <th>Guesses</th>
+          <th>Milestones</th>
+          <th>Hints</th>
+          <th>Admin Milestones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for da in data %}
+          <tr class="team_row" style=" background-color:{{ da.puzzle.color }};">
+            <th class="leftmost" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;" scope="row">
+              {{ da.team|truncatechars:40 }}
+            </th>
+            <td > {{ da.puzzle.index }} : {{ da.puzzle.name|truncatechars:40 }} <br> {{ da.puzzle.time }} mn </td>
+            <td > {{ da.guesses.nb }} ({{ da.guesses.last }}) <br> {{ da.guesses.time }}mn</td>
+            <td > {{ da.eurekas.nb }} / {{ da.eurekas.total}} ({{ da.eurekas.time }}mn) <br>  {{ da.eurekas.last }} </td>
+            <td > {{ da.hints.nb }} / {{ da.hints.total}} <br> last: {{ da.hints.last_time }}mn -  next: {{ da.hints.next_time }}mn </td>            
+            <td >
+          {% for admin in da.admin_eurekas %}
+              {{ admin.txt }} ({{ admin.time }}mn) <br>
+          {% endfor %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock content %}

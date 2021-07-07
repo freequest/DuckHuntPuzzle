@@ -13,8 +13,6 @@ Hunt Views
 .. autofunction:: huntserver.hunt_views.current_prepuzzle(request, puzzle_id)
 .. autofunction:: huntserver.hunt_views.puzzle_view(request, puzzle_id)
 .. autofunction:: huntserver.hunt_views.puzzle_hint(request, puzzle_id)
-.. autofunction:: huntserver.hunt_views.chat(request)
-.. autofunction:: huntserver.hunt_views.chat_status(request)
 .. autofunction:: huntserver.hunt_views.unlockables(request)
 
 Info Views
@@ -31,7 +29,6 @@ Staff Views
 .. autofunction:: huntserver.staff_views.queue(request, page_num)
 .. autofunction:: huntserver.staff_views.progress(request)
 .. autofunction:: huntserver.staff_views.charts(request)
-.. autofunction:: huntserver.staff_views.admin_chat(request)
 .. autofunction:: huntserver.staff_views.hunt_management(request)
 .. autofunction:: huntserver.staff_views.hunt_info(request)
 .. autofunction:: huntserver.staff_views.control(request)
@@ -44,6 +41,6 @@ Auth Views
 ==========
 
 .. autofunction:: huntserver.auth_views.login_selection(request)
-.. autofunction:: huntserver.auth_views.create_account(request)
+.. autofunction:: huntserver.auth_views.register(request)
 .. autofunction:: huntserver.auth_views.account_logout(request)
 .. autofunction:: huntserver.auth_views.shib_login(request)

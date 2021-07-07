@@ -1,0 +1,90 @@
+{% extends "staff/staff_base.html" %}
+{% block title %}Puzzle Progress{% endblock title %}
+
+{% block includes %}
+<script src="{{ STATIC_URL }}jquery.min.js"></script>
+<script type="text/javascript">
+  last_solve_pk = {{last_solve_pk}};
+  last_unlock_pk = {{last_unlock_pk}};
+  last_guess_pk = {{last_guess_pk}}
+</script>
+<script src="{{ STATIC_URL }}js/progress.js"></script>
+{% endblock includes %}
+
+{% block content %}
+<div class="titleform">
+  <h1>Puzzle Progress</h1>
+  <span>
+  <input type="checkbox" class="form-check-input" id="sort_check">
+  <label class="form-check-label" for="sort_check">Sort?</label>
+  <label class="sort_label" for="sort_select1">1:</label>
+  <select class="form-group sort_select" id="sort_select1">
+    <option># Puzzle Solves</option>
+    <option>Last Solve Time</option>
+  </select>
+  <label class="sort_label" for="sort_select2">2:</label>
+  <select class="form-group sort_select" id="sort_select2">
+    <option>Last Solve Time</option>
+    <option># Puzzle Solves</option>
+  </select>
+  <br>
+  Auto-update and sort every 30s
+  </span>
+  </div>
+  <div id=table-container>
+    <table id='progress' class="table table-hover table-striped table-condensed">
+      <thead class="progress-thead">
+        <tr>
+          <td class="actions leftmost">All </td>
+          <td class="actions"></td>
+          <td class="actions"></td>
+            <td class="actions">
+              <form class='unlock_form' action="/staff/progress/1" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="puzzle_id" value="{{ puzzle_list.0.pk }}">
+                <input type="hidden" name="action" value="unlock_all">
+                <button type="Submit" class="btn btn-secondary" onclick="return confirm('Are you sure?')">
+                  Unlock All
+                </button>
+              </form>
+            </td>
+        </tr>
+        <tr>
+          <th class="leftmost topmost">Team</th>
+          <th>#</br>P</th>
+          <th>Last&nbsp;Time</th>
+          {% for puzzle in puzzle_list %}
+            <th
+                data-id='{{ puzzle.puzzle_id }}'>
+              {{ puzzle.puzzle_name }}
+            </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for team_dict in sol_list %}
+          <tr class="team_row">
+            <th class="leftmost" data-id={{team_dict.team.pk}} style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;" scope='row'>
+              {{ team_dict.team.name|truncatechars:40 }}
+            </th>
+            <td class='num_puzzles'></td>
+            <td class='last_time'></td>
+            {% for puzzle in team_dict.puzzles %}
+              <td id='p{{ puzzle.0 }}t{{ team_dict.team.pk }}'
+              {% if puzzle.1 == "locked"%}
+                class='unavailable' style='text-align:center;'>
+              {% elif puzzle.1 == "unlocked" %}
+                class='available' data-date={{ puzzle.2 |date:"U"}}>
+                  <b>{{ puzzle.3|time:"H:i" }}</b>
+              {% else %}
+                class='solved' data-date={{ puzzle.2 |date:"U"}}>
+                  {{ puzzle.2|time:"H:i" }}
+              {% endif %}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock content %}

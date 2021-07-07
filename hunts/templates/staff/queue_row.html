@@ -1,0 +1,15 @@
+<tr class="
+{% if guess.response_text == '' %}
+  warning
+{% elif guess.is_correct %}
+  success
+{% else %}
+  danger
+{% endif %} guess" data-id='{{ guess.pk }}'>
+  <th style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;" scope="row">
+    {{ guess.team.team_name|truncatechars:40}}
+  </th>
+  <td>{{ guess.puzzle.puzzle_name }}</td>
+  <td style="max-width: 200px; overflow-wrap: break-word;">{{ guess.guess_text }}</td>
+  <td>{{ guess.guess_time|date:"H:i (D d)" }}</td>
+</tr>

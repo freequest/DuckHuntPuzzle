@@ -1,0 +1,102 @@
+{% extends "staff/staff_base.html" %}
+{% load admin_urls %}
+{% block title %}Hunt Info{% endblock title %}
+
+{% block content %}
+  <style>
+    table {
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+  </style>
+
+  <h1>Hunt Info</h1>
+  <div class="row">
+    <div class="col-xs-12 col-sm-9 col-md-8 col-lg-7">
+      {{ hunt.team_set.count }} Teams:<br>
+      <b>Needs a room: ({{ need_teams.count }})</b><br>
+      (Ordered first registration to last registration)
+      <table class="table table-bordered table-condensed table-responsive team-list">
+        {% for team in need_teams %}
+          <tr>
+            <td>{{ team.short_name }}</td>
+            <td>
+              <input class="loc_need"
+                     name="location"
+                     value="{{ team.location }}"
+                     data-team="{{ team.id }}"
+                     type="text">
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+      <button onclick="send_changes('.loc_need')">Update Locations</button>
+      <br>
+      <br>
+      <b>Has a room: ({{ have_teams.count }})</b>
+      <table class="table table-bordered table-condensed table-responsive team-list">
+        {% for team in have_teams %}
+          <tr>
+            <td>{{ team.short_name }}</td>
+            <td>
+              <input class="loc_have"
+                     name="location"
+                     value="{{ team.location }}"
+                     data-team="{{ team.id }}"
+                     type="text">
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+      <button onclick="send_changes('.loc_have')">Update Locations</button>
+      <br>
+      <br>
+      <b>Off Campus: ({{ offsite_teams.count }})</b>
+      <table class="table table-bordered table-condensed team-list">
+        {% for team in offsite_teams %}
+          <tr>
+            <td>{{ team.short_name }}</td>
+            <td>
+              <input class="loc_offsite"
+                     name="location"
+                     value="{{ team.location }}"
+                     data-team="{{ team.id }}"
+                     type="text">
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+      <button onclick="send_changes('.loc_offsite')">Update Locations</button>
+      <br>
+      <br>
+    </div>
+    <div class="col-xs-12 col-sm-3 col-md-4 col-lg-5">
+      <b>{{ people|length }} People ({{ new_people|length }} new)</b><br><br>
+
+      <b> Allergies: </b>
+      </br>
+      {% for person in people %}
+        {% if person.allergies %}
+          <a href="{% url 'admin:huntserver_person_change' person.pk %}">
+            {{person.allergies}}
+          </a>
+          </br>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    function send_changes(team_class) {
+      var changes = [];
+      $(team_class).each(function() {
+        changes.push({'id': $(this).data("team"), 'location': $(this).val()});
+      })
+      var json_data = JSON.stringify(changes);
+      $.post("", {"json_data": json_data, "csrfmiddlewaretoken": "{{csrf_token}}"},
+        function(data){
+          window.location.href = window.location.href;
+        });
+    }
+  </script>
+{% endblock content %}

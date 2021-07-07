@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block base_includes %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/hunt_base.css">
+{% endblock base_includes %}
+
+{% block content_wrapper %}
+<main class="split-hor">
+{% block content %} {% endblock content %}
+</main>
+{% endblock content_wrapper %}

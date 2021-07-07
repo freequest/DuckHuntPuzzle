@@ -1,0 +1,14 @@
+{% extends "stats/stats_base.html" %}
+{% block title %} Stats {% endblock title %}
+
+{% block includes %}
+<script src="{{ STATIC_URL }}jquery.min.js"></script>
+{% endblock includes %}
+
+{% block content %}
+
+<p>
+{{ hunt.hunt_name }} was a fun hunt: {{teams}} teams, {{people}} people, {{guesses}} guesses and {{solved}} puzzles solved!
+</p>
+
+{% endblock content %}

@@ -1,0 +1,22 @@
+{% extends "hunt/hunt_base.html" %}
+{% load hunt_tags %}
+
+
+{% block title %}Puzzles!{% endblock title %}
+
+{% block content %}
+{% include 'hunt/hunt_sidebar.html' with episodes=episodes hunt=hunt%}
+<div class="side-content">
+  <div class="splash">
+
+    <div class="card">
+      <div class="card-header">
+        Hunt
+      </div>
+      <div class="card-body">
+        Coucou
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

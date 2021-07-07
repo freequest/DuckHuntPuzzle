@@ -1,0 +1,36 @@
+
+{% load static %}
+
+<div id="sidebar" class="vertical-nav active">
+  <div id="sidebar-collapse">
+    <i class="bi bi-puzzle"></i>
+  </div>
+
+  <h2><a href="{% url 'hunt' hunt.hunt_number %}" style='text-decoration:none; color:#919191' id='hunt-link'>{{ hunt.hunt_name }}</a></h2>
+
+
+  {% for episode in episodes %}
+    <h3 class="episode-header">
+      <a class="collapsed" data-bs-toggle="collapse" href="#collapse-episode-{{ episode.ep.ep_number }}" role="button" aria-expanded="false" aria-controls="collapseExample">
+      {%if episode.solves > 0%}({{episode.solves}}/{{episode.ep.puzzle_set.count}}){%endif%}
+       {{ episode.ep.ep_name }}
+      </a>
+    </h3>
+    {% with episodes|last as last %}
+    <div id="collapse-episode-{{ episode.ep.ep_number }}" class="collapse list-group flex-column mb-0 {% if puzzle and puzzle in episode.puz %}show{%endif%}{%if not puzzle and episode == last %}show{%endif%}">
+      {%endwith%}
+      {% for cpuzzle in episode.puz %}
+          <a href="{% url 'puzzle' puzzle_id=cpuzzle.puzzle_id %}" class="list-group-item {% if puzzle and cpuzzle == puzzle %} active {% endif %}">
+            <!--<b>{% cycle 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 %} :</b> -->
+            {{ cpuzzle.puzzle_name }}
+          </a>
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>
+
+<div class=daypicture>
+		<img src="{% static 'img/mblogo.png' %}"  width=290 height=290 style='margin-top:15px;'/>
+</div>
+
+

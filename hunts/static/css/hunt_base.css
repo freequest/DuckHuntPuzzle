@@ -1,0 +1,389 @@
+main.split-hor {
+  flex-flow: row;
+  overflow: hidden;
+}
+
+.team-name {
+  position: absolute;
+  right: 20px;
+  top: 70px;
+  color: white;
+}
+
+.vertical-nav {
+  background: #4a4949;
+  color: #919191;
+  min-width: 17rem;
+  width: 17rem;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+  transition: margin 0.8s;
+  margin-left: -17rem;
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  z-index:1
+  }
+
+.vertical-nav.active {
+  margin-left: 0rem;
+}
+
+#sidebar{
+  max-height:calc(100% - 285px);
+  overflow:auto;
+}
+
+
+#sidebar-collapse {
+  display: none;
+  position: absolute;
+  left: 17rem;
+  top: 0;
+  background: #4a4949;
+  font-size: 32px;
+  padding: 0.1rem 0.5rem;
+  border-bottom-right-radius: 25%;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.vertical-nav h2 {
+  text-align: center;
+  margin: 0.7rem 0rem;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+h3.episode-header {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #aaa;
+  font-size: 90%;
+  border-top: 1px solid #6865659c;
+  margin-bottom: 0;
+}
+
+h3.episode-header a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+  text-indent: 6px;
+  padding: 0.5rem;
+  position: relative;
+}
+
+h3.episode-header a::after {
+  content: "▼";
+  display: block;
+  position: absolute;
+  right: 8px;
+  top: 9px;
+  transition: transform 0.5s;
+  text-indent: 0;
+  transform: rotate(180deg);
+}
+h3.episode-header a.collapsed::after {
+  transform: rotate(0deg);
+}
+
+
+.vertical-nav .list-group-item {
+  background: #0d0c0c24;
+  color: #828282;
+  border-right: none;
+  border-left: none;
+  border-radius: 0;
+  padding: 0.3rem 1rem;
+  font-size: 0.9rem;
+  border-color: #595959;
+}
+
+.vertical-nav .list-group-item.active {
+  text-indent: 0.5rem;
+  background: #313030;
+  color: #bfbcbc;
+}
+
+.side-content {
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  overflow:auto;
+}
+
+.puzzle-container {
+  flex-grow: 1;
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-flow: column;
+  color: white;
+  overflow: auto;
+}
+
+.puzzle-title {
+  font-size: 30px;
+  color: white;
+  font-weight: bold;
+}
+
+.puzzle-holder {
+  flex-grow: 1;
+  max-height: calc(100% - 125px);
+  overflow:auto;
+}
+
+.puzzle-holder div.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+#guess-bar {
+  padding: 1rem;
+  position: relative;
+}
+
+#guess-feedback {
+  position: absolute;
+  bottom: 45px;
+  left: 1%;
+  width: 98%;
+}
+
+#right-bar {
+  background: none;
+  box-shadow: none;
+  margin-left: 0px;
+  overflow: auto;
+}
+
+.right-block {
+  background: rgb(244, 145, 85);
+  border-radius: 5px;
+  margin: 1rem;
+  box-shadow: -5px 5px 6px rgba(44, 49, 44, 0.44);
+  position: relative;
+}
+
+.right-block h3 {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: black;
+  font-size: 90%;
+  border-bottom: 1px solid #312c2c9c;
+  margin-bottom: 0.5rem;
+  position: absolute;
+  width: calc(100% - 1.6rem);
+  left: 0.8rem;
+  top: 0;
+  background: rgb(244, 145, 85);
+  padding-top: 0.8rem;
+}
+
+.right-block ul {
+  list-style-type: none;
+  max-height: 100%;
+  height: 100%;
+  padding: 0.8rem;
+  padding-top: 2rem;
+}
+
+.right-block ul li {
+  border-bottom: 1px dotted rgb(128, 80, 50);
+  color: #424141;
+  word-break: break-word;
+}
+
+.right-block ul li span.guess-value {
+  color: #424141;
+}
+
+.right-block ul li span.guess-user {
+  margin-left: auto;
+  font-size: 15px;
+  color: rgb(159, 110, 80);
+  float: right;
+}
+
+img.fit-inside {
+  object-fit: contain;
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.daypicture {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 0;
+  margin-left: -10px;
+  height: 300px;
+  overflow:hidden;
+}
+
+.hunt-page-container {
+  max-width: 900px;
+  color: white;
+  padding: 40px;
+}
+
+.hunt-message {
+  text-align: center;
+}
+
+#answer-container {
+  padding-left: 2rem;
+}
+
+.spoiler {
+  display: none;
+}
+
+.showhint{
+  font-style:italic;
+}
+
+.showhint:hover{
+  color: #eeeeee;
+  background-color: #999;
+}
+
+.showhint:target {
+  display: none;
+}
+
+.showhint:target ~ .spoiler {
+  display: inline;
+}
+
+@media (max-width: 700px) {
+  main > .daypicture {
+    display: none;
+  }
+
+  body {
+    background-attachment: scroll; /* please, dont use small screen */
+  }
+
+  main {
+    display: grid;
+    grid-template-rows: 3fr 1fr;
+    min-height: 500px; /* please, dont use small screen */
+  }
+
+  .side-content .daypicture {
+    bottom: unset;
+    margin-left: unset;
+    height: unset;
+    left: unset;
+    position: unset;
+    text-align: center;
+  }
+
+  .side-content {
+    grid-row: 1/3;
+  }
+
+  .puzzle-container .daypicture {
+    position: absolute;
+    top: 3rem;
+    right: 0;
+    width: 10.5rem; /* 11rem - .5rem */
+    bottom: unset;
+    margin-left: unset;
+    height: unset;
+    left: unset;
+  }
+
+  .daypicture img {
+    width: 11rem;
+    height: 12rem;
+  }
+
+  .puzzle-container .puzzle-title {
+    margin-top: 2rem;
+    max-width: calc(100% - 9.5rem);
+    min-height: 7.5rem;
+  }
+
+  .puzzle-container .puzzle-holder {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .puzzle-container {
+    grid-row: 1;
+    padding: 1rem .5rem .5rem .5rem;
+  }
+
+  #guess-bar {
+    padding: 0;
+  }
+
+  #right-bar {
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: unset;
+  }
+  #right-bar .right-block {
+    margin: .3rem;
+  }
+  #right-bar .right-block:first-child {
+    grid-column-start: 1;
+  }
+  #right-bar .right-block:nth-last-child(2) {
+    grid-column-end: 3;
+  }
+  #right-bar .right-block ul {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+  }
+  #right-bar .right-block ul > li {
+    flex: 0 0 auto;
+  }
+
+  #sidebar {
+    position: absolute;
+    min-width: unset;
+    max-width: calc(100% - 10rem);
+    max-height: calc(100% - 4rem);
+    z-index: 2;
+  }
+
+  #sidebar h2 {
+    padding-right: 1.2rem;
+  }
+
+  #sidebar h2:after {
+    content: "▼";
+    display: inline-block;
+    right: 8px;
+    top: 13px;
+    transition: transform 0.5s;
+    text-indent: 0;
+    position: absolute;
+    font-size: .8em;
+  }
+
+  #sidebar:hover h2:after {
+    transform: scale(0);
+  }
+
+  #sidebar h2 ~ * {
+    display: none
+  }
+
+  #sidebar:hover h2 ~ * {
+    display: unset
+  }
+}
+
+
+@media (max-width: 650px) {
+  .puzzle-container .puzzle-title {
+    font-size: 23px;
+  }
+}

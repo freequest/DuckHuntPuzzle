@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="splash">
+  <div class="card-grouped">
+    <div class="card">
+      <div class="card-header">
+        Create new team
+      </div>
+      <div class="card-body">
+        <form method="POST" action="">
+          {% csrf_token %}
+          <input type="hidden" name="form_type" value="create_team" />
+          Please enter a new team name:
+         <input class="form-control" name="team_name" type="text">
+
+         <br />
+          <div class="text-center">
+            <input class="btn btn-primary btn-lg" type="submit" value="Create and Join Team"/>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        Join existing team
+      </div>
+      <div class="card-body">
+        <form method="POST" action="">
+          {% csrf_token %}
+          <input type="hidden" name="form_type" value="join_team" />
+          Select a team to join:
+          <select class="form-control" name="team_name" style="width: 200px;">
+            {% for team in teams %}
+              <option value="{{team.team_name}}">{{team.short_name}}</option>
+            {% endfor %}
+          </select>
+          <br>
+          Enter the team join code:
+          <input class="form-control" name="join_code" type="text" style="width:100px;" maxlength="5">
+          <br>
+
+          <div class="text-center">
+            <input class="btn btn-primary btn-lg" type="submit" value="Join Team"/>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block footer %}{% endblock %}

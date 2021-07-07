@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load hunt_tags %}
+{% load static %}
+
+{% block content %}
+<div class="container splash">
+  <div id='logos'>
+    <p align="center">
+        <img style="height:40vh; width:auto" id="phlogo" src='{% static 'img/mblogo.png' %}'/>
+    </p>
+    <h1 class="illusion">MindBreakers</h1>
+    <p align="center"><strong>
+      {% if curr_hunt.is_locked %}
+        Our next hunt: <br>
+      {% elif curr_hunt.is_day_of_hunt %}
+        Our current hunt: <br>
+      {% else %}
+        Our next hunt: <br>
+      {% endif %}
+    </strong></p>
+    <p align="center"><strong>
+      {{curr_hunt.hunt_name}}<br>
+      Part 1: {{ curr_hunt.episode_set.first.start_date|date:" d/m/y " }}  {{ curr_hunt.episode_set.first.start_date|time:"H:i e" }} 
+      <br>
+      Part 2: {{ curr_hunt.episode_set.last.start_date|date:" d/m/y " }}  {{ curr_hunt.episode_set.last.start_date|time:"H:i e" }} 
+      <br>
+    </strong></p>
+    <p align="center">
+      <a href="{% url 'registration' %}">
+        <strong>
+          {% if team %}
+            View Registration
+          {% else %}
+            Register Now!
+          {% endif %}
+        </strong>
+      </a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      {% if curr_hunt.discord_url %}
+      <a href="{{ curr_hunt.discord_url }}">
+        <strong>
+        Join us on Discord!
+        </strong>
+      </a>
+      <br>
+      {%endif%}
+      <a href="/hunt/42">
+        <strong>
+        Try our demo puzzles!
+        </strong>
+      </a>
+    </p>
+  </div>
+  
+  <div  style="position:absolute; bottom:20px;right:20px">
+  <a href="https://github.com/bs24/puzzlehunt_server" style="margin-right:15px; color:#b9b9b9" >Source code</a>
+  <a href="/info/mentions-legales" style="color:#b9b9b9">Mentions légales</a>
+  </div>
+  
+</div>
+{% endblock content %}
+{% block footer %}{% endblock %}
