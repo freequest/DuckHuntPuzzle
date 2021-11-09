@@ -258,7 +258,7 @@ class PuzzleView(RequiredPuzzleAccessMixin, View):
             
             context['postpuzzle_values'] = {'answer': encode( "secretkey", request.puzzle.answer), 
                                             'answer_regex': encode("secretkey", request.puzzle.answer_regex), 
-#                                            'hints': [{'text': hi.text, 'time':hi.time} for hi in request.puzzle.hint_set.all()],
+                                            'hints': [{'text': hi.text, 'time':hi.time} for hi in request.puzzle.hint_set.order_by('time')],
                                             'eurekas': [{'regex': encode("secretkey", eur.regex), 'answer':encode("secretkey", eur.answer), 'feedback': encode("secretkey", eur.feedback)} for eur in request.puzzle.eureka_set.filter(admin_only=False).all()],
                                           }
             if request.team is not None:
