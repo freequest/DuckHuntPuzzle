@@ -251,16 +251,17 @@ def progress(request, ep_pk):
 
 
 # background color of overview row
-def getColor(minutes, minutes_lastguess): 
+def getColor(minutes, minutes_lastguess, team_hints, total_hints): 
     if minutes_lastguess > 60 or (minutes_lastguess < 0 and minutes >30):
       return "rgb(213,213,213)"
     if minutes < 0:
       return "rgb(192,163,255)"
-    if (minutes < 40):
-      return "rgb(" + str(int(168*(1-minutes/40.)+255*minutes/40.))  + ",255,163)"
-    elif (minutes < 80):
-      minutes -= 40
-      return "rgb(255," + str(int(255*(1-minutes/40.)+163*minutes/40.))  + ",163)"
+    minutes += team_hints * 60. / total_hints
+    if (minutes < 60):
+      return "rgb(" + str(int(168*(1-minutes/60.)+255*minutes/60.))  + ",255,163)"
+    elif (minutes < 120):
+      minutes -= 60
+      return "rgb(255," + str(int(255*(1-minutes/60.)+163*minutes/60.))  + ",163)"
     else:
       return "rgb(255,163,163)"
 
@@ -297,7 +298,6 @@ def overview(request):
       lastguess = guesses.last()
       text_lastguess = '' if lastguess == None else lastguess.guess_text
       time_lastguess = -1 if lastguess == None else int((timezone.now() - lastguess.guess_time).total_seconds()/60)
-      color = getColor(time_stuck, time_lastguess)
       team_eurekas = team.eurekas.filter(puzzle=puzzle, admin_only=False).annotate(time=F('teameurekalink__time')).order_by('time')
       lasteureka = team_eurekas.last()
       time_lasteureka = -1 if lasteureka == None else int((timezone.now() - lasteureka.time).total_seconds()/60)
@@ -326,6 +326,8 @@ def overview(request):
         last_hint_time = -1
       if next_hint_time == 360:
         next_hint_time = -1
+        
+      color = getColor(time_stuck, time_lastguess, team_hints, total_hints)
 
       sol_list.append({'team': team.team_name,
                        'puzzle': {'name': puzzle_name, 'time': time_stuck, 'index': nb_solve+1, 'color': color},
