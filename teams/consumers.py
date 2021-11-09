@@ -162,17 +162,22 @@ class PuzzleWebsocket(JsonWebsocketConsumer):
             self.hint_events[hint.id].cancel()
         except KeyError:
             pass
-
-        delay = hint.delay_for_team(self.team) - (timezone.now() - hint.starting_time_for_team(self.team))
+        
+        wait = hint.delay_for_team(self.team)
+        start = hint.starting_time_for_team(self.team)
+        delay = wait - (timezone.now() - start)
         if delay is None:
             return
         delay = delay.total_seconds()
         if not send_expired and delay < 0:
             return
-
+        
+        sped_up = False
+        if wait < hint.time:
+            sped_up = True      
         loop = sync_to_async.threadlocal.main_event_loop
         # run the hint sender function on the asyncio event loop so we don't have to bother writing scheduler stuff
-        task = loop.create_task(self.send_new_hint(self.team, hint, delay))
+        task = loop.create_task(self.send_new_hint(self.team, hint, delay, sped_up))
         self.hint_events[hint.id] = task
 
     def cancel_scheduled_hint(self, content):
@@ -185,11 +190,11 @@ class PuzzleWebsocket(JsonWebsocketConsumer):
             pass
 
     @classmethod
-    def send_new_hint_to_team(cls, team, hint):
-        cls._send_message(cls._puzzle_groupname(hint.puzzle, team), cls._new_hint_json(hint))
+    def send_new_hint_to_team(cls, team, hint, sped_up):
+        cls._send_message(cls._puzzle_groupname(hint.puzzle, team), cls._new_hint_json(hint, sped_up))
 
     @classmethod
-    def _new_hint_json(self, hint):
+    def _new_hint_json(self, hint, sped_up):
         return {
             'type': 'new_hint',
             'content': {
@@ -197,10 +202,11 @@ class PuzzleWebsocket(JsonWebsocketConsumer):
                 'hint_uid': hint.compact_id,
                 'time': str(hint.time),
                 'time_human' : format_duration(hint.time),
+                'sped_up' : sped_up
             }
         }
 
-    async def send_new_hint(self, team, hint, delay, **kwargs):
+    async def send_new_hint(self, team, hint, delay, sped_up, **kwargs):
         # We can't have a sync function (added to the event loop via call_later) because it would have to call back
         # ultimately to SyncConsumer's send method, which is wrapped in async_to_sync, which refuses to run in a thread
         # with a running asyncio event loop.
@@ -211,7 +217,7 @@ class PuzzleWebsocket(JsonWebsocketConsumer):
         # subclass of) SyncConsumer. While bizarre, the original async function is available as AsyncToSync.awaitable.
         # We also have to reproduce the functionality of JsonWebsocketConsumer and WebsocketConsumer here (they don't
         # have async versions.)
-        await self.base_send.awaitable({'type': 'websocket.send', 'text': self.encode_json(self._new_hint_json(hint))})
+        await self.base_send.awaitable({'type': 'websocket.send', 'text': self.encode_json(self._new_hint_json(hint, sped_up))})
         del self.hint_events[hint.id]
 
 
@@ -351,10 +357,16 @@ class PuzzleWebsocket(JsonWebsocketConsumer):
     def send_old_hints(self, start='all'):
         hints = self.puzzle.hint_set.all()
         for hint in hints:
-            delay = hint.delay_for_team(self.team) - (timezone.now() - hint.starting_time_for_team(self.team))
+            wait = hint.delay_for_team(self.team)
+            start = hint.starting_time_for_team(self.team)
+            delay = wait - (timezone.now() - start)
             delay = delay.total_seconds()
+            
+            sped_up = False
+            if wait < hint.time:
+                sped_up = True      
             if delay < 0 or (self.is_staff and self.team is not None):
-                self.send_new_hint_to_team(self.team, hint)
+                self.send_new_hint_to_team(self.team, hint, sped_up)
 
     def send_old_unlocks(self):
         eurekas = self.team.eurekas.filter(puzzle=self.puzzle, admin_only=False).order_by('teameurekalink__time')

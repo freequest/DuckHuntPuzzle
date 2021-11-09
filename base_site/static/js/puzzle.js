@@ -262,7 +262,9 @@ var hints = [];
 
 function receivedNewHint(content) {
   if(!hints.includes(content.hint_uid)){
-    hints[content.hint_uid] = {'time': content.time, 'time_human': content.time_human, 'hint': content.hint}
+    var decoration = ""
+    if (content.sped_up) decoration = "*"
+    hints[content.hint_uid] = {'time': content.time, 'time_human': content.time_human, 'hint': content.hint, 'deco' : decoration}
     updateHints()
   }
 }
@@ -277,7 +279,7 @@ function updateHints() {
     return 0
   })
   entries.forEach(entry => {
-    hints_list.append('<li><span class="guess-user">(' + entry[1].time_human + ')</span><span class="guess-value">' + (entry[1].hint) + '</span></li>')
+    hints_list.append('<li><span class="guess-user">(' + entry[1].deco + entry[1].time_human + entry[1].deco + ')</span><span class="guess-value">' + (entry[1].hint) + '</span></li>')
   })
 }
 
