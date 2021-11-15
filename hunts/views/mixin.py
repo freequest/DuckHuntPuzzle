@@ -14,13 +14,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, reverse
 from django.conf import settings
 from django.urls import reverse_lazy
-from django.http import JsonResponse, HttpResponseNotFound
+from django.http import JsonResponse, Http404
 from hunts.models import APIToken
 
 class RequiredPuzzleAccessMixin():
     def dispatch(self, request, *args, **kwargs):
         if request.puzzle is None:
-            return HttpResponseNotFound('<h1>Page not found</h1>')
+            raise Http404('Puzzle not found')
 
         if not request.hunt.is_public:
             if(not request.user.is_authenticated):
@@ -33,7 +33,7 @@ class RequiredPuzzleAccessMixin():
                         or request.puzzle not in request.team.puz_unlocked.all():
                    # return redirect(reverse('hunt', kwargs={'hunt_num' : request.hunt.hunt_number }))
                     # do not reveal if a puzzle exists
-                    return HttpResponseNotFound('<h1>Page not found</h1>')
+                    raise Http404('Puzzle not accessible')
         
         if request.hunt.is_finished and not request.user.is_authenticated:
                 return redirect('%s?next=%s' % (reverse_lazy(settings.LOGIN_URL), request.path))
@@ -44,13 +44,13 @@ class RequiredPuzzleAccessMixin():
 class RequiredSolutionAccessMixin():
     def dispatch(self, request, *args, **kwargs):
         if request.puzzle is None:
-            return HttpResponseNotFound('<h1>Page not found</h1>')
+            raise Http404('Puzzle not found')
 
         if not request.user.is_authenticated:
                 return redirect('%s?next=%s' % (reverse_lazy(settings.LOGIN_URL), request.path))
 
         if not request.user.is_staff and not request.hunt.is_finished:
-            return HttpResponseNotFound('<h1>Page not found</h1>')
+            raise Http404('Puzzle not accessible')
             
         return super().dispatch(request, *args, **kwargs)
 

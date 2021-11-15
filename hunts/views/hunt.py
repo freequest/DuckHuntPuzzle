@@ -19,7 +19,7 @@ from ratelimit.utils import is_ratelimited
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseForbidden
+from django.http import HttpResponse, Http404, HttpResponseForbidden, HttpResponseNotFound
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.template import RequestContext
@@ -75,7 +75,7 @@ class PuzzleFile(RequiredPuzzleAccessMixin, View):
            with open(pathname, "rb") as f:
               return HttpResponse(f.read(), content_type="image/png")
         except IOError:
-           return HttpResponseNotFound('<h1>Page not found</h1>')
+           raise Http404('Puzzle file not found')
 
 
 
@@ -91,7 +91,7 @@ class SolutionFile(RequiredSolutionAccessMixin, View):
            with open(pathname, "rb") as f:
                return HttpResponse(f.read(), content_type="application/pdf")
         except IOError:
-           return HttpResponseNotFound('<h1>Page not found</h1>')
+           raise Http404('Solution file not found')
 
 
 
