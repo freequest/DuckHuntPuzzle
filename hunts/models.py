@@ -170,9 +170,14 @@ class Hunt(models.Model):
         if (user.is_staff or self.is_public):
             episode_list = self.episode_set.order_by('ep_number').all()
         else:
-            episode_pks = TeamEpisodeLink.objects \
-                .filter(team=team, episode__start_date__lte=timezone.now()+F("headstart")) \
-                .values_list('episode', flat=True)
+            if team.is_playtester_team:
+                 episode_pks = TeamEpisodeLink.objects \
+                    .filter(team=team) \
+                    .values_list('episode', flat=True)
+            else:
+                episode_pks = TeamEpisodeLink.objects \
+                    .filter(team=team, episode__start_date__lte=timezone.now()+F("headstart")) \
+                    .values_list('episode', flat=True)
             episode_list = Episode.objects.filter(pk__in=episode_pks).order_by('ep_number')
 
         return episode_list
@@ -376,6 +381,8 @@ class Puzzle(models.Model):
             try:
                 puz_unlock = TeamPuzzleLink.objects.get(puzzle=self, team=team)
                 ep_unlock = TeamEpisodeLink.objects.get(episode=episode, team=team)
+                if team.is_playtester_team:
+                    return puz_unlock.time
                 return max(puz_unlock.time,episode.start_date-ep_unlock.headstart)
             except TeamPuzzleLink.DoesNotExist:
                 return episode.start_date

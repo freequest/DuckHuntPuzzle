@@ -135,6 +135,8 @@ class HuntIndex(View):
         if team is not None:
             if user.is_staff:
               message = "You're an admin, you should delete your progress before the hunt starts<br>"
+            if team.is_playtester_team:
+              message = "Thanks for beta-testing the hunt, please stay focused ;)<br>"
             ep_solved = team.ep_solved.count()
             if len(episodes)>0 and ep_solved == len(episodes):
               if len(episodes) == hunt.episode_set.count():
