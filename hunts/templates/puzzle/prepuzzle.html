@@ -20,10 +20,6 @@
   <div class="puzzle-holder mt-5 mb-5" id = "puzzle-holder">
     {{ text | safe }}
   </div>
-<div id='checking-div' class="puzzle-holder" style="display:none">
-<div id='checking-insidediv' class='centered'>
-</div>
-</div>
 
   <div id="guess-bar">
     <div id="guess-feedback" class="container py-3"></div>
@@ -55,6 +51,14 @@ May speed-up specific hints.">
     <h3>Guesses <!--Note: this is a demo puzzle, more functionnalities will be available during the hunt.--></h3>
     <ul id="guesses"></ul>
   </div>
+</div>
+
+
+
+<div id='checking-div' style="display:none">
+<div id='checking-insidediv' class='centered'>
+hello
+</div>
 </div>
 
 {% endblock content %}

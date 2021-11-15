@@ -42,14 +42,19 @@ $(function() {
     }
     
     
+    if (puzzle.style.opacity == 0.3) {
+        return
+    }
     
-    puzzle.style.display= "none";
-    rightbar.style.opacity= 0;
-    checkdiv.style.display= "block";
     
-    checkinsidediv.innerHTML = '<img src="/static/img/mbicon.png" alt="" class="fit-inside rotating" style="max-width:60%; max-height:50%">';
+//    puzzle.style.display= "none";
+    puzzle.style.opacity= 0.3;
+    rightbar.style.opacity= 0.3;
+    checkdiv.style= "display:block; position: absolute; top: 50%; left: 50%; margin-right: -50%;transform: translate(-50%, -50%); z-index:10;";
+    
+    checkinsidediv.innerHTML = '<img src="/static/img/mbicon.png" alt="" class="fit-inside rotating" style="max-width:60%; max-height:50%;">';
 
-    div_field.disabled = true;
+    div_field.disabled = false;
     div_button.disabled = true;
     
     
@@ -75,6 +80,7 @@ $(function() {
                 checkdiv.style.display= "none";
                 div_field.disabled = false;
                 div_button.disabled = false;
+                puzzle.style.opacity= 1;
                 if (document.getElementById("last-to-finish"))
                 {
                 window.location.href = document.getElementById("hunt-link").href
@@ -94,6 +100,7 @@ $(function() {
                 checkdiv.style.display= "none";
                 div_field.disabled = false;
                 div_button.disabled = false;
+                puzzle.style.opacity= 1;
                 });
            });
         } else if(data.status == "wrong"){
@@ -106,6 +113,7 @@ $(function() {
                     checkdiv.style.display= "none";
                     div_field.disabled = false;
                     div_button.disabled = false;
+                    puzzle.style.opacity= 1;
                     });
             });
         } else {
@@ -125,6 +133,7 @@ $(function() {
         puzzle.style.display= "block";
         checkdiv.style.display= "none";
         rightbar.style.opacity= 1;
+        puzzle.style.opacity= 1;
         div_field.disabled = false;
         div_button.disabled = false;
       },
@@ -300,6 +309,15 @@ function addEureka(eureka, eureka_uid, feedback) {
 
 function receivedNewEureka(content) {
   if(!eurekas.includes(content.hint_uid)){
+    sleep(5000).then(()=>{
+               addEureka(content.eureka, content.eureka_uid, content.feedback)
+                });
+  }
+}
+
+
+function receivedOldEureka(content) {
+  if(!eurekas.includes(content.hint_uid)){
     addEureka(content.eureka, content.eureka_uid, content.feedback)
   }
 }
@@ -321,7 +339,7 @@ function openEventSocket() {
     'new_hint': receivedNewHint,
     'old_hint': receivedNewHint,
     'new_eureka': receivedNewEureka,
-    'old_eureka': receivedNewEureka,
+    'old_eureka': receivedOldEureka,
     'new_guess': receivedNewGuess,
     'old_guess': receivedOldGuess,
     'error': receivedError,

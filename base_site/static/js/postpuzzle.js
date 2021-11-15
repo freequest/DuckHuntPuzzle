@@ -29,14 +29,24 @@ async function check() {
     let checkdiv = document.getElementById("checking-div");
     let checkinsidediv = document.getElementById("checking-insidediv");
     let feedback = document.getElementById("guess-feedback");
+    let rightbar = document.getElementById("right-bar");
     
-    div_field.disabled = true;
+    
+    
+    if (puzzle.style.opacity == 0.3) {
+        return
+    }
+    
+    
+//    puzzle.style.display= "none";
+    puzzle.style.opacity= 0.3;
+    rightbar.style.opacity= 0.3;
+    checkdiv.style= "display:block; position: absolute; top: 50%; left: 50%; margin-right: -50%;transform: translate(-50%, -50%); z-index:10;";
+    
+    checkinsidediv.innerHTML = '<img src="/static/img/mbicon.png" alt="" class="fit-inside rotating" style="max-width:60%; max-height:50%;">';
+
+    div_field.disabled = false;
     div_button.disabled = true;
-    
-    puzzle.style.display= "none";
-    checkdiv.style.display= "block";
-    
-    checkinsidediv.innerHTML = '<img src="/static/img/mbicon.png" alt="" class="fit-inside rotating" style="max-width:60%; max-height:50%">';
     
     await delay(4000);
     
@@ -78,6 +88,8 @@ async function check() {
     checkdiv.style.display= "none";
     div_field.disabled = false;
     div_button.disabled = false;
+    puzzle.style.opacity= 1;
+    rightbar.style.opacity= 1;
     lock=false
 }
 

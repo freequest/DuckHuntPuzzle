@@ -12,7 +12,7 @@
 
 import asyncio
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from asgiref.sync import async_to_sync, sync_to_async
 from channels.generic.websocket import JsonWebsocketConsumer
@@ -369,8 +369,8 @@ class PuzzleWebsocket(JsonWebsocketConsumer):
                 self.send_new_hint_to_team(self.team, hint, sped_up)
 
     def send_old_unlocks(self):
-        eurekas = self.team.eurekas.filter(puzzle=self.puzzle, admin_only=False).order_by('teameurekalink__time')
-
+        eurekas = self.team.eurekas.filter(puzzle=self.puzzle, admin_only=False, teameurekalink__time__lt=timezone.now()-timedelta(seconds=5)).order_by('teameurekalink__time')
+        # do not send super new eurekas to prevent players refreshing while someone is submitting getting those faster. The downside is that they will not get it if they don't refresh
         for u in eurekas:
             self.send_json({
                 'type': 'old_eureka',
