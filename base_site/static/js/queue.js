@@ -46,7 +46,7 @@ $(document).ready(function() {
       }
     });
   }
-  setInterval(get_posts, 3000);
+  setInterval(get_posts, 10000);
 
   function formListener(e) {
     e.preventDefault();
@@ -72,7 +72,6 @@ $(document).ready(function() {
     if ($('tr[data-id=' + pk + ']').length == 0) {
       if(!guess.hasClass('correct')) {
         flashing = !focused;
-        $('audio')[0].play();
       }
       guess.prependTo("#sub_table");
       if($('#sub_table tr').length >= 30){
