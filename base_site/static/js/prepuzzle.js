@@ -49,34 +49,39 @@ async function check() {
 
     div_field.disabled = false;
     div_button.disabled = true;
+
+    let guess=field.val()
     
-    await delay(4000);
     
-    
-    if (!field.val()) {
+    if (!guess) {
       button.data('empty-answer', true)
     } else {
       button.removeData('empty-answer')
     }
-    const prepuzzle_values = JSON.parse(document.getElementById('prepuzzle_values').textContent);
-    hash = await sha256("SuperRandomInitialSalt" + field.val().replaceAll(" ", "").toLowerCase())
+    document.getElementById('answer-entry').value = ''
     
-    addGuess(field.val(), false, field.val());
+    await delay(4000);
+    
+    
+    const prepuzzle_values = JSON.parse(document.getElementById('prepuzzle_values').textContent);
+    hash = await sha256("SuperRandomInitialSalt" + guess.replaceAll(" ", "").toLowerCase())
+    
+    addGuess(guess, false, guess);
     
     if ( hash == prepuzzle_values['answerHash']){
       checkinsidediv.innerHTML = '<p style="font-size:300px; color:lime"> ✓ </p> '
       if ( prepuzzle_values['responseEncoded'].length > 0)
       {
-        feedback.innerHTML = ('<p>Congratulations for solving this puzzle! \n' + decode(field.val().replaceAll(" ", "").toLowerCase(), prepuzzle_values['responseEncoded']) + '</p>')
+        feedback.innerHTML = ('<p>Congratulations for solving this puzzle! \n' + decode(guess.replaceAll(" ", "").toLowerCase(), prepuzzle_values['responseEncoded']) + '</p>')
       }
       else
       {
-        feedback.innerHTML = ('<p>Congratulations for solving this puzzle! The answer was indeed "' + field.val().replaceAll(" ", "").toLowerCase() + '"</p>')      
+        feedback.innerHTML = ('<p>Congratulations for solving this puzzle! The answer was indeed "' + guess.replaceAll(" ", "").toLowerCase() + '"</p>')      
       }
     }
     else if(prepuzzle_values['eurekaHashes'].includes(hash))
     {
-      addEureka(field.val().replaceAll(" ", "").toLowerCase(), field.val().replaceAll(" ", "").toLowerCase(), '');
+      addEureka(guess.replaceAll(" ", "").toLowerCase(), guess.replaceAll(" ", "").toLowerCase(), '');
       checkinsidediv.innerHTML = '<img src="/static/img/milestone.png" alt="" class="fit-inside" style="max-width:60%; max-height:70%"> '
     }
     else
@@ -85,7 +90,6 @@ async function check() {
     }
     await delay(2000);   
     
-    document.getElementById('answer-entry').value = ''
     
     puzzle.style.display= "block";
     checkdiv.style.display= "none";

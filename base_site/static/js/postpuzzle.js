@@ -48,19 +48,24 @@ async function check() {
     div_field.disabled = false;
     div_button.disabled = true;
     
-    await delay(4000);
     
+    let Guess=field.val()
     
     if (!field.val()) {
       button.data('empty-answer', true)
     } else {
       button.removeData('empty-answer')
     }
+    document.getElementById('answer-entry').value = ''
+    
+    await delay(4000);
+    
+    
     const data = JSON.parse(document.getElementById('postpuzzle_values').textContent);
 
-    let guess = field.val().replaceAll(" ", "").toLowerCase();
+    let guess = Guess.replaceAll(" ", "").toLowerCase();
     
-    addGuess(field.val(), false, field.val());
+    addGuess(Guess, false, Guess);
     
     if ( RegExp('^' + decode('secretkey',data['answer_regex']).toLowerCase() + '$').test(guess) || guess == decode('secretkey',data['answer']).replaceAll(" ", "").toLowerCase()){ 
       checkinsidediv.innerHTML = '<p style="font-size:300px; color:lime"> ✓ </p> '
@@ -82,7 +87,6 @@ async function check() {
     }
     await delay(2000);   
     
-    document.getElementById('answer-entry').value = ''
     
     puzzle.style.display= "block";
     checkdiv.style.display= "none";
