@@ -229,7 +229,7 @@ class PuzzleWebsocket(JsonWebsocketConsumer):
             'timestamp': str(guess.guess_time),
             'guess': guess.guess_text,
             'guess_uid': guess.id,
-            'correct': False, #correct,
+            'correct': guess.is_correct,
             'by': guess.user.username,
         }
 

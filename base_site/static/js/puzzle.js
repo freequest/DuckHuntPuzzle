@@ -231,8 +231,50 @@ function addGuess(user, guess, correct, guess_uid) {
 
 function receivedNewGuess(content) {
   if (!guesses.includes(content.guess_uid)) {
-    addGuess(content.by, content.guess, content.correct, content.guess_uid)
+  
+    sleep(5000).then(()=>{
+        addGuess(content.by, content.guess, content.correct, content.guess_uid)
 
+
+    if (content.correct) {
+        
+        
+        let div_field = document.getElementById("answer-entry");
+        let div_button = document.getElementById("answer-button");
+        
+        let puzzle = document.getElementById("puzzle-holder");
+        let checkdiv = document.getElementById("checking-div");
+        let checkinsidediv = document.getElementById("checking-insidediv");
+        let rightbar = document.getElementById("right-bar");
+        
+        puzzle.style.opacity= 0.3;
+        rightbar.style.opacity= 0.3;
+        checkdiv.style= "display:block; position: absolute; top: 50%; left: 50%; margin-right: -50%;transform: translate(-50%, -50%); z-index:10;";
+        
+        checkinsidediv.innerHTML = '<img src="/static/img/mbicon.png" alt="" class="fit-inside rotating" style="max-width:60%; max-height:50%;">';
+
+        div_field.disabled = false;
+        div_button.disabled = true;
+    
+         checkinsidediv.innerHTML = '<p style="font-size:300px; color:lime">✓</p> ';
+            rightbar.style.opacity= 1;
+         sleep(3000).then(()=>{
+            puzzle.style.display= "block";
+            checkdiv.style.display= "none";
+            div_field.disabled = false;
+            div_button.disabled = false;
+            puzzle.style.opacity= 1;
+            if (document.getElementById("last-to-finish"))
+            {
+            window.location.href = document.getElementById("hunt-link").href
+            }
+            else
+            {
+            window.location.href = window.location.href;
+            }
+            });
+    }
+       });
 /*
     if (content.correct) {
       var message = $('#correct-answer-message')
