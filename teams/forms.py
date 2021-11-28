@@ -51,7 +51,7 @@ class UserForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get('email')
         username = self.cleaned_data.get('username')
-        if email and User.objects.filter(email=email).exclude(username=username).exists():
+        if email and User.objects.filter(email=email).exclude(username=username).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError('Someone is already using that email address.')
         return email
 
