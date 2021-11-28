@@ -2,7 +2,7 @@ html, body { height:100%; }
 body {
   display:flex;
   flex-flow:column;
-  background:radial-gradient(circle, rgb(8, 162, 91) 20%, rgb(17, 87, 55) 100%) fixed;
+  background:radial-gradient(circle, rgb(3, 149, 82) 50%, rgb(17, 87, 55) 100%) fixed;
   overflow-x: hidden;
 }
 
@@ -157,7 +157,8 @@ h1.illusion {
 }
 
 a {
-  color: #133b88;
+/*  color: #133b88;*/
+    color: #ffdb9a;
 }
 
 
