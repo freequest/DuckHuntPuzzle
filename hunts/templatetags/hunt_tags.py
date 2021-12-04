@@ -85,6 +85,9 @@ class CurrentHuntEventNode(template.Node):
         context['tmpl_curr_hunt'] = Hunt.objects.get(is_current_hunt=True)
         return ''
 
+@register.filter
+def index(indexable, i):
+    return indexable[i-1]
 
 @register.tag
 def set_hunts(parser, token):

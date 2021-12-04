@@ -388,21 +388,30 @@ def charts(request):
       teams = teams.annotate(last_time=Max('puzzlesolve__guess__guess_time'))
       teams = teams.order_by(F('solves').desc(nulls_last=True),
                                      F('last_time').asc(nulls_last=True))
+      team_names = teams.values_list('team_name')
                                      
       for ep in hunt.episode_set.order_by('ep_number').all():
         minTime = timezone.now()
         solve_ep = []
         for team in teams:
           solves = team.puzzlesolve_set.filter(puzzle__episode=ep)
-          solves = solves.order_by('guess__guess_time').values_list('guess__guess_time', flat=True)
+          solves = solves.order_by('guess__guess_time')
           if len(solves)>0:
-            minTime = min(minTime, min(solves))
+            start_time = solves[0].puzzle.starting_time_for_team(team)
+          solves = solves.values_list('guess__guess_time', flat=True)
+          if len(solves)>0:
+            minTime = min(minTime, start_time)
           solves = [sol.isoformat() for sol in solves]
-          solves += [None] * (ep.puzzle_set.count() - len(solves))
+          
+          if len(solves)>0:
+            puzzle_limits = [(start_time.isoformat(), solves[0])] + ([ (solves[i],x)  for i, x in enumerate(solves[1:])])
+          else:
+            puzzle_limits = []
 
-          solve_ep.append({'solve': solves, 'name': team.team_name})
+          solves += [None] * (ep.puzzle_set.count() - len(solves))
+          solve_ep.append({'solve': solves, 'name': team.team_name, 'puz_limits': puzzle_limits})
         names = ep.puzzle_set.values_list('puzzle_name',flat=True)
-        solve_time.append({'solve': solve_ep, 'names': list(names), 'min': minTime.isoformat()})
+        solve_time.append({'solve': solve_ep, 'names': list(names), 'min': minTime.isoformat(), 'teams': list(team_names)})
 
 
       #Chart fast / average puzzle solves
