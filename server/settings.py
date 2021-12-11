@@ -253,4 +253,6 @@ EMAIL_HOST_USER = os.environ.get("DJANGO_EMAIL_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("DJANGO_EMAIL_PASSWORD")
 DOMAIN = os.getenv("DOMAIN", default="default.com")
 
+DEFAULT_FROM_EMAIL = "noreply@" + DOMAIN
+
 ALLOWED_HOSTS = ['*']
