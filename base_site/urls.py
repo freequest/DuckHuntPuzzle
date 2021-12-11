@@ -10,7 +10,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License along with Hunter2.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf.urls import include, url
+from django.conf.urls import url
 from django.urls import path, reverse_lazy, include
 from django.conf import settings
 from baton.autodiscover import admin
@@ -27,4 +27,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('baton/', include('baton.urls')),
     url(r'^$', views.index, name='index'),
+    # Auth/password reset
+    path('accounts/', include('django.contrib.auth.urls')),
 ]

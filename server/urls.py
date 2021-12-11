@@ -24,11 +24,6 @@ from hunts.urls import urlpatterns as hunts_patterns
 from teams.urls import urlpatterns as teams_patterns
 
 urlpatterns = [
-    # User auth/password reset
-    url(r'^accounts/logout/$', base_auth_views.LogoutView.as_view(),
-        name='logout', kwargs={'next_page': '/'}),
-    url(r'^accounts/login/$', base_auth_views.LoginView.as_view()),
-    path('accounts/', include('django.contrib.auth.urls')),
 ] \
     + staticfiles_urlpatterns() \
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
