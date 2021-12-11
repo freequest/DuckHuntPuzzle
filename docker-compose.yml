@@ -45,6 +45,7 @@ services:
       - DJANGO_SETTINGS_MODULE=server.settings
       - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@db/${DB_NAME}
       - ENABLE_DEBUG_TOOLBAR
+      - ENABLE_DEBUG_EMAIL
       - SENTRY_DSN
     depends_on:
       - db
