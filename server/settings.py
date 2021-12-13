@@ -213,7 +213,7 @@ LOGGING = {
 # Email settings
 CONTACT_EMAIL = 'https://discord.gg/BMH36payns'
 
-EMAIL_USE_TLS = True
+EMAIL_USE_SSL = True
 EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST")
 EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT")
 
