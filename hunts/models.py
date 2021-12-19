@@ -65,7 +65,8 @@ class Hunt(models.Model):
         help_text="A number used internally for hunt sorting, must be unique")
     team_size = models.IntegerField()
     start_date = models.DateTimeField(
-        help_text="The date/time at which the hunt page will become visible to registered users")
+        help_text="The date/time at which registration starts and the hunt page becomes visible.<br>\
+        Note that the puzzle release depends on the episode start date, not this start date.")
     end_date = models.DateTimeField(
         help_text="The date/time at which a hunt will be archived and available to the public / stats will be released")
     display_start_date = models.DateTimeField(
