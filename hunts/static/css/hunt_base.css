@@ -220,7 +220,13 @@ img.fit-inside {
   margin-left: -10px;
   height: 300px;
   overflow:hidden;
+  display: flex;
 }
+
+.daypicture img{
+    align-self: end;
+}
+
 
 .hunt-page-container {
   max-width: 900px;
