@@ -44,7 +44,7 @@ from teams.forms import GuessForm, UnlockForm, EmailForm, LookupForm
 
 DT_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
 
-UPDATE_STATS = False
+UPDATE_STATS = True
 
 
 def add_apps_to_context(context, request):
@@ -115,7 +115,7 @@ def teams(request):
 
     
     # load json if exists & non staff
-    template_filename =  'stats/static/teams.json'
+    template_filename =  'stats/static/teams' + str(hunt.id) + '.json'
     filename =  'hunts/templates/' + template_filename
 
     if ((not request.user.is_staff or not UPDATE_STATS) and os.path.exists(filename)):
@@ -123,6 +123,7 @@ def teams(request):
         context = json.load(json_file)
         for d in context['team_data']:
           d.update({'last_time': parse_datetime(d['last_time']) if d['last_time'] is not None else None})
+        context['hunt'].update({'display_start_date': parse_datetime(context['hunt']['display_start_date'])})
           
     else:
       teams = hunt.team_set
@@ -174,7 +175,7 @@ def team(request):
 
     
     # load json if exists & non staff
-    template_filename =  'stats/static/team-' + str(request.GET.get("team")) + '.json'
+    template_filename =  'stats/static/team' + str(hunt.id) + '-' + str(request.GET.get("team")) + '.json'
     filename =  'hunts/templates/' + template_filename
 
     if ((not request.user.is_staff or not UPDATE_STATS) and os.path.exists(filename)):
@@ -182,6 +183,7 @@ def team(request):
         context = json.load(json_file)
         for d in context['solve_data']:
           d.update({'sol_time': parse_datetime(d['sol_time'])})
+        context['hunt'].update({'display_start_date': parse_datetime(context['hunt']['display_start_date'])})
         
     else:
       solves = team.puzzlesolve_set.annotate(time=F('guess__guess_time'), puzId = F('puzzle__puzzle_id')).order_by('time')
@@ -229,7 +231,7 @@ def puzzles(request):
 
     
     # load json if exists & non staff
-    template_filename =  'stats/static/puzzles.json'
+    template_filename =  'stats/static/puzzles' + str(hunt.id) + '.json'
     filename =  'hunts/templates/' + template_filename
 
     if ((not request.user.is_staff or not UPDATE_STATS) and os.path.exists(filename)):
@@ -238,6 +240,7 @@ def puzzles(request):
         for d in context['data']:
           d.update({'min_time': parse_datetime(d['min_time'])})
           d.update({'av_time': parse_datetime(d['av_time'])})
+        context['hunt'].update({'display_start_date': parse_datetime(context['hunt']['display_start_date'])})
           
     else:
       puzzle_list = [puzzle for episode in hunt.episode_set.order_by('ep_number').all() for puzzle in episode.puzzle_set.all()]
@@ -295,7 +298,7 @@ def puzzle(request):
     
     
     # load json if exists & non staff
-    template_filename =  'stats/static/puzzle-' + str(request.GET.get("puzzle")) + '.json'
+    template_filename =  'stats/static/puzzle' + str(hunt.id) + '-' + str(request.GET.get("puzzle")) + '.json'
     filename =  'hunts/templates/' + template_filename
 
     if ((not request.user.is_staff or not UPDATE_STATS) and os.path.exists(filename)):
@@ -303,6 +306,7 @@ def puzzle(request):
         context = json.load(json_file)
         for d in context['data']:
           d.update({'sol_time': parse_datetime(d['sol_time'])})
+        context['hunt'].update({'display_start_date': parse_datetime(context['hunt']['display_start_date'])})
 
     else:
     
@@ -367,12 +371,13 @@ def charts(request):
 
 
     # load json if exists & non staff
-    template_filename =  'stats/static/charts.json'
+    template_filename =  'stats/static/charts' + str(hunt.id) + '.json'
     filename =  'hunts/templates/' + template_filename
 
     if ((not request.user.is_staff or not UPDATE_STATS) and os.path.exists(filename)):
       with open(filename) as json_file:
         context = json.load(json_file)
+        context['hunt'].update({'display_start_date': parse_datetime(context['hunt']['display_start_date'])})
     
     else:        
     
