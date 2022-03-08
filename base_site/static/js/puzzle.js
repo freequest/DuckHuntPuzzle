@@ -17,7 +17,11 @@ $(function() {
     let div_field = document.getElementById("answer-entry");
     let div_button = document.getElementById("answer-button");
     
-    let puzzle = document.getElementById("puzzle-holder");
+    let puzzle = document.getElementById("puzzle");
+    if (puzzle == null)
+    {
+        puzzle = document.getElementById("puzzle-holder");
+    }
     let checkdiv = document.getElementById("checking-div");
     let checkinsidediv = document.getElementById("checking-insidediv");
     let feedback = document.getElementById("guess-feedback");
@@ -242,7 +246,11 @@ function receivedNewGuess(content) {
         let div_field = document.getElementById("answer-entry");
         let div_button = document.getElementById("answer-button");
         
-        let puzzle = document.getElementById("puzzle-holder");
+        let puzzle = document.getElementById("puzzle");
+        if (puzzle == null)
+        {
+            puzzle = document.getElementById("puzzle-holder");
+        }
         let checkdiv = document.getElementById("checking-div");
         let checkinsidediv = document.getElementById("checking-insidediv");
         let rightbar = document.getElementById("right-bar");
