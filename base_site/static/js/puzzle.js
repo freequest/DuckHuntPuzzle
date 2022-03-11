@@ -353,7 +353,7 @@ var eurekas = [];
 
 function addEureka(eureka, eureka_uid, feedback) {
   var guesses_table = $('#eurekas');
-  guesses_table.prepend('<li><span class="guess-user">' + encode(feedback) + '</span><span class="guess-value">' + encode(eureka) + '</span></li>') 
+  guesses_table.prepend('<li><span class="guess-user">' + feedback + '</span><span class="guess-value">' + encode(eureka) + '</span></li>') 
   eurekas.push(eureka_uid)
 }
 

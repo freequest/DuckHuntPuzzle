@@ -34,6 +34,7 @@ from django.db.models import F, Max, Count, Min, Subquery, OuterRef
 from django.db.models.fields import PositiveIntegerField
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.mixins import LoginRequiredMixin
+import mimetypes
 import json
 import os
 import re
@@ -73,7 +74,7 @@ class PuzzleFile(RequiredPuzzleAccessMixin, View):
         pathname = smart_str(os.path.join(settings.MEDIA_ROOT, puzzle_file.file.path))
         try:
            with open(pathname, "rb") as f:
-              return HttpResponse(f.read(), content_type="image/png")
+              return HttpResponse(f.read(), content_type=mimetypes.guess_type(pathname)[0])
         except IOError:
            raise Http404('Puzzle file not found')
 
