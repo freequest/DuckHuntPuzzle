@@ -429,7 +429,7 @@ def charts(request):
         if len(solves)>0:
           dic =  {'av_dur': datetime.fromtimestamp(dic['av_dur'].total_seconds(), timezone.utc).isoformat()[:-13] , 
           'min_dur': datetime.fromtimestamp(dic['min_dur'].total_seconds(), timezone.utc).isoformat()[:-13],
-          'med_dur': datetime.fromtimestamp(solves[math.floor(solves.count()/2-1)].duration.total_seconds(), timezone.utc).isoformat()[:-13],
+          'med_dur':  datetime.fromtimestamp(solves[0 if len(solves)==1 else math.floor(solves.count()/2-1)].duration.total_seconds(), timezone.utc).isoformat()[:-13],
           'name': puz.puzzle_name}
         else:
           dic =  {'av_dur': None, 'min_dur': None,  'name': puz.puzzle_name, 'med_dur': None}
