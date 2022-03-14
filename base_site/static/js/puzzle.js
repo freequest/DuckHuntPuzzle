@@ -80,7 +80,6 @@ $(function() {
              checkinsidediv.innerHTML = '<p style="font-size:300px; color:lime">✓</p> ';
                 rightbar.style.opacity= 1;
           sleep(2000).then(()=>{
-                puzzle.style.display= "block";
                 checkdiv.style.display= "none";
                 div_field.disabled = false;
                 div_button.disabled = false;
@@ -100,7 +99,6 @@ $(function() {
           checkinsidediv.innerHTML = '<img src="/static/img/milestone.png" alt="" class="fit-inside"  style="max-width:60%; max-height:70%"> ';
                 rightbar.style.opacity= 1;
           sleep(2000).then(()=>{
-                puzzle.style.display= "block";
                 checkdiv.style.display= "none";
                 div_field.disabled = false;
                 div_button.disabled = false;
@@ -113,7 +111,6 @@ $(function() {
         checkinsidediv.innerHTML = '<p style="font-size:300px; color:#cc0000">✗</p> ';
                     rightbar.style.opacity= 1;
               sleep(2000).then(()=>{
-                    puzzle.style.display= "block";
                     checkdiv.style.display= "none";
                     div_field.disabled = false;
                     div_button.disabled = false;
@@ -134,7 +131,6 @@ $(function() {
         } else {
           message('There was an error submitting the answer.', error)
         }
-        puzzle.style.display= "block";
         checkdiv.style.display= "none";
         rightbar.style.opacity= 1;
         puzzle.style.opacity= 1;
@@ -267,7 +263,6 @@ function receivedNewGuess(content) {
          checkinsidediv.innerHTML = '<p style="font-size:300px; color:lime">✓</p> ';
             rightbar.style.opacity= 1;
          sleep(3000).then(()=>{
-            puzzle.style.display= "block";
             checkdiv.style.display= "none";
             div_field.disabled = false;
             div_button.disabled = false;
