@@ -337,8 +337,15 @@ function updateHints() {
     else if(a[1].time > b[1].time) return 1
     return 0
   })
+  
+  var checkbox = document.getElementById("hidehints");
+  var style = ""
+  if (checkbox.checked){
+     style = "style= 'color: rgb(244, 145, 85)'";
+  }
+  
   entries.forEach(entry => {
-    hints_list.append('<li><span class="guess-user">(' + entry[1].deco + entry[1].time_human + entry[1].deco + ')</span><span class="guess-value">' + (entry[1].hint) + '</span></li>')
+    hints_list.append('<li><span class="guess-user">(' + entry[1].deco + entry[1].time_human + entry[1].deco + ')</span><span class="guess-value" ' + style + '>' + (entry[1].hint) + '</span></li>')
   })
 }
 
@@ -430,6 +437,49 @@ $(function() {
   openEventSocket()
 })
 
+
+
+function App() {}
+
+function HideHints(state){
+  var hintsli = document.getElementById("hints").getElementsByClassName("guess-value");
+  for (i = 0; i < hintsli.length; i++) {
+  if (state){
+      hintsli[i].style = "color: rgb(244, 145, 85)";    
+    }
+    else{
+      hintsli[i].style = "";
+    }
+  }
+}
+
+App.prototype.setState = function(state) {
+  localStorage.setItem('checked', state);  
+  HideHints(state)
+}
+
+App.prototype.getState = function() {
+  return localStorage.getItem('checked');
+}
+
+function init() {
+  var app = new App();
+  var state = app.getState();
+  var checkbox = document.getElementById("hidehints");
+
+  if (state == 'true') {
+    checkbox.checked = true;
+    HideHints(true)
+  }
+
+  checkbox.addEventListener('click', function() {
+      app.setState(checkbox.checked);
+  });
+}
+
+$(function() {
+init();
+})
 
 
 

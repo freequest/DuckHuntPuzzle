@@ -206,6 +206,14 @@ h3.episode-header a.collapsed::after {
   float: right;
 }
 
+
+ .hidehints-block{
+    color: white;
+    margin-left: auto;
+    margin-right: auto;
+ }
+
+
 img.fit-inside {
   object-fit: contain;
   max-height: 100%;
