@@ -437,15 +437,9 @@ $(function() {
 function App() {}
 
 function HideHints(state){
-  var hintsli = document.getElementById("hints").getElementsByClassName("guess-value");
-  for (i = 0; i < hintsli.length; i++) {
-  if (state){
-      hintsli[i].style = "color: rgb(244, 145, 85)";    
-    }
-    else{
-      hintsli[i].style = "";
-    }
-  }
+  var hintsli = document.getElementById("hints");
+  if (state) hintsli.classList.add("hidden");
+  else hintsli.classList.remove("hidden");
 }
 
 App.prototype.setState = function(state) {

@@ -212,6 +212,11 @@ h3.episode-header a.collapsed::after {
     margin-left: auto;
     margin-right: auto;
  }
+ 
+#hints.hidden .guess-value,
+#hints.hidden .guess-value a {
+  color: transparent;
+}
 
 
 img.fit-inside {
