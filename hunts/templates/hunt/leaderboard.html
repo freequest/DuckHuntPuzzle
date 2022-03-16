@@ -55,7 +55,11 @@
         $(document).ready(function () {
             $("#myTable").tablesorter({theme:'bootstrap' });
             $("#myTable2").tablesorter({theme:'bootstrap' });
+            $("#hall").load("/info/hall #steal");
         });
+        
+        
+        
     </script>
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}css/leaderboard.css">
 {% endblock includes %}
@@ -115,6 +119,19 @@
         </tr>
         {% endfor %}
       </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content" style="text-align: center;">
+      <h1 style="text-align: center;"> Hall of Fame </h1>
+        <div id="hall"></div>
     </div>
   </div>
 </div>
