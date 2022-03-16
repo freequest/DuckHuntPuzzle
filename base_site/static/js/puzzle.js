@@ -333,11 +333,7 @@ function updateHints() {
     return 0
   })
   
-  var checkbox = document.getElementById("hidehints");
   var style = ""
-  if (checkbox.checked){
-     style = "style= 'color: rgb(244, 145, 85)'";
-  }
   
   entries.forEach(entry => {
     hints_list.append('<li><span class="guess-user">(' + entry[1].deco + entry[1].time_human + entry[1].deco + ')</span><span class="guess-value" ' + style + '>' + (entry[1].hint) + '</span></li>')
