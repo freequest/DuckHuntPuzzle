@@ -76,7 +76,7 @@
 <button id="show-all-stacked-{{ forloop.counter }}" class="btn btn-outline-primary btn-sm" class="statbtn">Show All Puzzles</button>
 <button id="hide-all-stacked-{{ forloop.counter }}" class="btn btn-outline-secondary btn-sm" class="statbtn">Hide All Puzzles</button>
 </div>
-  <canvas id="chart_stacked_{{forloop.counter}}" width="600" height="{% widthratio 10 1 ep.teams|length %}" class="statchart"></canvas>
+  <canvas id="chart_stacked_{{forloop.counter}}" width="600" height="{% widthratio 15 1 ep.teams|length %}" class="statchart"></canvas>
   {% endfor %}
   
     </div>

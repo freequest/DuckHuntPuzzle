@@ -174,6 +174,9 @@ function setAllHidden(chart, hidden) {
             },      
             y: {
                 stacked: true,
+                  ticks: {
+                    autoSkip: false
+                  },
             }
 
             },
