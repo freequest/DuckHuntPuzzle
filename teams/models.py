@@ -326,7 +326,7 @@ class Guess(models.Model):
         answer or the non-empty regex). Spaces do not matter so are removed. """
         noSpace = self.guess_text.upper().replace(" ","")
         return ( noSpace == self.puzzle.answer.upper().replace(" ","") or
-                 (self.puzzle.answer_regex!="" and re.fullmatch(self.puzzle.answer_regex, noSpace, re.IGNORECASE)) )
+                 (self.puzzle.answer_regex!="" and not (re.fullmatch(self.puzzle.answer_regex, noSpace, re.IGNORECASE) is None )) )
 
     @property
     def convert_markdown_response(self):
@@ -372,7 +372,7 @@ class Guess(models.Model):
         else:
             # TODO removed unlocked Eureka
             for resp in self.puzzle.eureka_set.all():
-                if(re.fullmatch(resp.regex.replace(" ",""), noSpace, re.IGNORECASE)):
+                if(not re.fullmatch(resp.regex.replace(" ",""), noSpace, re.IGNORECASE) is None):
                     if(resp not in self.team.eurekas.all()):
                         TeamEurekaLink.objects.create(team=self.team, eureka=resp, time=timezone.now())
                     if resp.admin_only:
