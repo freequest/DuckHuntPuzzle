@@ -37,12 +37,15 @@ services:
       - DOMAIN
       - DJANGO_SECRET_KEY
       - DJANGO_ENABLE_DEBUG
+      - DJANGO_EMAIL_HOST
+      - DJANGO_EMAIL_PORT
       - DJANGO_EMAIL_USER
       - DJANGO_EMAIL_PASSWORD
       - DJANGO_USE_SHIBBOLETH
       - DJANGO_SETTINGS_MODULE=server.settings
       - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@db/${DB_NAME}
       - ENABLE_DEBUG_TOOLBAR
+      - ENABLE_DEBUG_EMAIL
       - SENTRY_DSN
     depends_on:
       - db

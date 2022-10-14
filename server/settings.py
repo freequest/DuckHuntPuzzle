@@ -29,6 +29,7 @@ SITE_TITLE = "MindBreakers"
 INSTALLED_APPS = (
     'baton',
     'django_mirror',
+    'base_site',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,7 +39,6 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'base_site',
     'teams',
     'hunts',
     'crispy_forms',
@@ -213,9 +213,9 @@ LOGGING = {
 # Email settings
 CONTACT_EMAIL = 'https://discord.gg/BMH36payns'
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
+EMAIL_USE_SSL = True
+EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST")
+EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT")
 
 # Environment variable overrides
 if os.environ.get("ENABLE_DEBUG_EMAIL"):
@@ -252,5 +252,7 @@ INTERNAL_IPS = ['127.0.0.1', 'localhost']
 EMAIL_HOST_USER = os.environ.get("DJANGO_EMAIL_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("DJANGO_EMAIL_PASSWORD")
 DOMAIN = os.getenv("DOMAIN", default="default.com")
+
+DEFAULT_FROM_EMAIL = "noreply@" + DOMAIN
 
 ALLOWED_HOSTS = ['*']
