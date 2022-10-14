@@ -67,7 +67,7 @@ async function check() {
     
     addGuess(Guess, false, Guess);
     
-    if ( RegExp('^' + decode('secretkey',data['answer_regex']).toLowerCase() + '$').test(guess) || guess == decode('secretkey',data['answer']).replaceAll(" ", "").toLowerCase()){ 
+    if ( RegExp('^(' + decode('secretkey',data['answer_regex']).toLowerCase() + ')$').test(guess) || guess == decode('secretkey',data['answer']).replaceAll(" ", "").toLowerCase()){ 
       checkinsidediv.innerHTML = '<p style="font-size:300px; color:lime"> ✓ </p> '
       feedback.innerHTML = ('<p>Congratulations for solving this puzzle! The answer was indeed "' + decode('secretkey',data['answer']) + '"</p>')      
     }
@@ -75,7 +75,7 @@ async function check() {
     {
       var eureka = false;
       for(var eur of data['eurekas']){
-        if ( RegExp('^' + decode('secretkey',eur['regex']).toLowerCase() + '$').test(guess)){ 
+        if ( RegExp('^(' + decode('secretkey',eur['regex']).toLowerCase() + ')$').test(guess)){ 
         addEureka(decode('secretkey',eur['answer']), decode('secretkey',eur['answer']), decode('secretkey',eur['feedback']));
         checkinsidediv.innerHTML = '<img src="/static/img/milestone.png" alt="" class="fit-inside" style="max-width:60%; max-height:70%"> ';
         eureka = true;
