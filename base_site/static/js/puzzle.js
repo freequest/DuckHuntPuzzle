@@ -320,6 +320,8 @@ function receivedNewHint(content) {
     if (content.sped_up) decoration = "*"
     hints[content.hint_uid] = {'time': content.time, 'time_human': content.time_human, 'hint': content.hint, 'deco' : decoration}
     updateHints()
+    var audio = new Audio('/static/img/hint.mp3');
+    audio.play();
   }
 }
 
