@@ -7,6 +7,8 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, Math.max(ms, 0)));
 }
 
+var time_loaded = Date.now()
+
     var reveal = Date.now() + 5000;
 
 $(function() {
@@ -316,14 +318,46 @@ var hints = [];
 
 function receivedNewHint(content) {
   if(!hints.includes(content.hint_uid)){
+  
+    var mutecheckbox = document.getElementById("unmute");
+    const hinthtml = document.getElementById("hints").innerHTML;
+    var nb_hints =  (hinthtml.match(/<li>/g) || []).length;
+    
+    
+    receivedOldHint(content)
+    
+    const cleanHints = hints.filter(function () { return true })
+
+    
+    if (Date.now() < time_loaded + 5000) // do not play sound right after the load
+      return
+      
+//    console.log(cleanHints.length)
+//    console.log(nb_hints)
+//    console.log(Date.now())
+//    console.log(time_loaded)
+
+    if (mutecheckbox.checked && cleanHints.length > nb_hints)
+    {
+      var audio = new Audio('/static/img/hint.mp3');
+      audio.play();
+    }
+    
+  }
+}
+
+
+function receivedOldHint(content) {
+  if(!hints.includes(content.hint_uid)){
     var decoration = ""
     if (content.sped_up) decoration = "*"
     hints[content.hint_uid] = {'time': content.time, 'time_human': content.time_human, 'hint': content.hint, 'deco' : decoration}
+    
+
     updateHints()
-    var audio = new Audio('/static/img/hint.mp3');
-    audio.play();
   }
 }
+
 
 function updateHints() {
   let hints_list = $("#hints")
@@ -387,7 +421,7 @@ var lastUpdated;
 function openEventSocket() {
   const socketHandlers = {
     'new_hint': receivedNewHint,
-    'old_hint': receivedNewHint,
+    'old_hint': receivedOldHint,
     'new_eureka': receivedNewEureka,
     'old_eureka': receivedOldEureka,
     'new_guess': receivedNewGuess,
@@ -449,18 +483,42 @@ App.prototype.getState = function() {
   return localStorage.getItem('checked');
 }
 
+
+function MuteApp() {}
+
+
+MuteApp.prototype.setState = function(state) {
+  localStorage.setItem('unmute_checked', state);  
+}
+
+MuteApp.prototype.getState = function() {
+  return localStorage.getItem('unmute_checked');
+}
+
 function init() {
   var app = new App();
   var state = app.getState();
   var checkbox = document.getElementById("hidehints");
+  
+  var muteapp = new MuteApp();
+  var mutestate = muteapp.getState();
+  var mutecheckbox = document.getElementById("unmute");
 
   if (state == 'true') {
     checkbox.checked = true;
     HideHints(true)
   }
+  
+  if (mutestate == 'true') {
+    mutecheckbox.checked = true;
+  }
 
   checkbox.addEventListener('click', function() {
       app.setState(checkbox.checked);
+  });
+  
+  mutecheckbox.addEventListener('click', function() {
+      muteapp.setState(mutecheckbox.checked);
   });
 }
 
