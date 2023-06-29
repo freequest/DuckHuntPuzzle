@@ -1,5 +1,5 @@
-# MindbreakersServer
-A server for running Mindbreakers' puzzle hunts. This project is a fork from https://github.com/dlareau/puzzlehunt_server, where more information about the original project can be found. It also includes some code taken from https://gitlab.com/hunter2.app/hunter2, most notably for websocket communications and discord bot API. This project aims at different (or simpler) kinds of puzzle hunts than the aforementioned projects, therefore it focuses on different features.
+# DuckHuntPuzzle
+A server for running DuckHuntPuzzles. This project is a fork from https://github.com/bs24/MindbreakersServer wich is a fork from https://github.com/dlareau/puzzlehunt_server, where more information about the original project can be found. It also includes some code taken from https://gitlab.com/hunter2.app/hunter2, most notably for websocket communications and discord bot API. This project aims at different (or simpler) kinds of puzzle hunts than the aforementioned projects, therefore it focuses on different features.
 
 
 ### Setup
